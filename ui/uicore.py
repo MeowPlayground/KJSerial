@@ -21,6 +21,7 @@ class UI(QWidget):
 
     def Init_UI(self, MainWindow):
         MainWindow.setWindowTitle("KJ Sample Serial")
+        MainWindow.setMinimumHeight(500)
         self.formLayout = QVBoxLayout()
 
         h1 = QHBoxLayout()

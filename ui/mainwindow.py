@@ -102,7 +102,6 @@ class MainWindow(QWidget):
 
     def openPort(self):
         if self.ser.read_flag:
-            print("stop")
             self.ser.stop()
         else:
             port = self.ui.serialComboBox.currentText()
