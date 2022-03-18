@@ -1,10 +1,10 @@
 from PyQt5.QtCore import QObject, pyqtSignal, QTimer
-from PyQt5.QtWidgets import QApplication, QWidget
+from PyQt5.QtWidgets import QApplication, QWidget, QFileDialog
 from functools import partial
-from PyQt5.QtGui import QIcon
+from PyQt5.QtGui import QIcon, QTextCursor
 from .uicore import UI
 from core import getPortList, myserial
-
+import time
 
 class MySignals(QObject):
     # 定义一种信号，两个参数 类型分别是： QTextBrowser 和 字符串
@@ -37,9 +37,19 @@ class Action():
         self.ui.sendEdit.clear()
 
     def print(self, t:str):
+        tc = self.ui.tb.textCursor()
+        tc.movePosition(QTextCursor.End)
+        if self.ui.showTimeCheckBox.isChecked():
+            nowtime = time.strftime("%H:%M:%S", time.localtime())
+            tc.insertText("[" + nowtime + "]")
+        tc.insertText(t)
+
+        
         if self.ui.autoWrapCheckBox.isChecked():
-            self.ui.tb.ensureCursorVisible()
-        self.ui.tb.insertPlainText(str(t))
+            # self.ui.tb.ensureCursorVisible()
+            self.ui.tb.setTextCursor(tc)
+        
+        
 
 
 class MainWindow(QWidget):
@@ -72,6 +82,10 @@ class MainWindow(QWidget):
         ms.print.connect(self.a.print)
         ms._lineClear.connect(self.a._lineClear)
         self.ui.sendButton.clicked.connect(self.send)
+        self.ui.serialLabel.button_doubleclicked_signal.connect(self.showAbout)
+        self.ui.saveButton.clicked.connect(self.savefile)
+        self.ui.clearButton.clicked.connect(self.ui.tb.clear)
+        
 
     def initSerial(self):
         ports = getPortList()
@@ -93,6 +107,9 @@ class MainWindow(QWidget):
         else:
             port = self.ui.serialComboBox.currentText()
             bund = int(self.ui.baudComboBox.currentText())
+            if port == "":
+                ms.print.emit("当前未选择串口\n")
+                return
             self.ser.setSer(port, bund)
             d = self.ser.open(ms.print.emit)
             ms.print.emit(d[1])
@@ -104,3 +121,26 @@ class MainWindow(QWidget):
                 self.ser.write(text)
                 ms._lineClear.emit()
 
+    def showAbout(self):
+        self.ui.msg.show()
+
+
+    def savefile(self):
+        filename = QFileDialog.getSaveFileName(self.ui, "open file", "./", "TEXT Files(*.txt)")
+        # print(filename)
+        if filename[0] == "" or filename == None:
+            return
+        try:
+            with open(filename[0], "w") as f:
+                text = self.ui.tb.toPlainText()
+                f.write(text)
+            ms.print.emit("保存到"+filename[0])
+        except Exception as e:
+            ms.print.emit("保存失败" + str(e))
+
+def runApp():
+    app = QApplication([])
+    mainw = MainWindow()
+    mainw.setWindowIcon(QIcon(':/icon.ico'))
+    mainw.show()
+    app.exec_()

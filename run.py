@@ -1,8 +1,6 @@
-from PyQt5.QtWidgets import QApplication
-from ui import MainWindow
+from ui import runApp
+import img.img
+
 
 if __name__ == "__main__":
-    app = QApplication([])
-    mainw = MainWindow()
-    mainw.show()
-    app.exec_()
+    runApp()

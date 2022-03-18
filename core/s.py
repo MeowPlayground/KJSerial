@@ -27,10 +27,10 @@ class myserial():
                 rt.setDaemon(True)
                 rt.start()
                 
-                return 0, "打开串口%s成功,波特率%d" % (self.port, self.bund)
+                return 0, "打开串口%s成功,波特率%d\n" % (self.port, self.bund)
         except Exception as e:
             self.read_flag = False
-            return 1, "打开串口%s失败\n%s" % (self.port, str(e))
+            return 1, "打开串口%s失败\n%s\n" % (self.port, str(e))
 
     def write(self, text):
         result = self.ser.write(text.encode('utf-8'))
