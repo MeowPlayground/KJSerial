@@ -115,7 +115,7 @@ class MainWindow(QWidget):
 
     def send(self):
         text = self.ui.sendEdit.text()
-        if not text == "" or not text == None:
+        if not (text == "") or not (text is None):
             if self.ser.read_flag:
                 self.ser.write(text)
                 ms._lineClear.emit()
@@ -127,7 +127,7 @@ class MainWindow(QWidget):
     def savefile(self):
         filename = QFileDialog.getSaveFileName(self.ui, "open file", "./", "TEXT Files(*.txt)")
         # print(filename)
-        if filename[0] == "" or filename == None:
+        if filename[0] == "" or filename is None:
             return
         try:
             with open(filename[0], "w") as f:

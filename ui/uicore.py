@@ -30,7 +30,7 @@ class UI(QWidget):
 
         baudLabel = QLabel("波特率:")
         self.baudComboBox = QComboBox()
-        self.baudComboBox.addItems(["115200", "9600", "19200", "38400", "4800"])    
+        self.baudComboBox.addItems(["115200", "9600", "921600", "19200", "38400", "4800"])    
 
         self.connectButton = QPushButton("连接")    
         
