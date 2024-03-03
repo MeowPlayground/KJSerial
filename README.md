@@ -1,7 +1,5 @@
 # KJSerial
 
-仓库移动到 [MitryOpen](https://github.com/MitryOpen/KJSerial)
- 
 ### 这是一个简单的串口工具
 基于的是pyqt
 
